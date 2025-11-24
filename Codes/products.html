@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body class="products-page">
+
+<!-- Search bar -->
+<input type="text" id="search-bar" placeholder="Search Products..." onkeyup="searchProducts()" class="search-box">
+
+<header>
+    <h1 class="store-title">Agri Bloom Essentials</h1>
+    <p style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Welcome to AgrowBloom Essentials - Where we Nuture Nature, So you can grow your crops better.</p>
+    <a href="cart.html" class="cart-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+    
+</header>
+
+<div class="product-row">
+
+    <div class="product-card" data-name="All purpose Fertilzier" data-price="2500" data-stock="5">
+        <img src="../Assets/img1.jpg" alt="All purpose Fertilzier">
+        <h2>All purpose Fertilzier</h2>
+        <div class="price">$2500.00</div>
+        <p>Stock: <span class="stock-count">5</span></p>
+        <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-name="Chicken Manure" data-price="1500" data-stock="7">
+        <img src="../Assets/img3.jpg" alt="Chicken Manure">
+        <h2>Chicken Manure</h2>
+        <div class="price">$1500.00</div>
+        <p>Stock: <span class="stock-count">7</span></p>
+        <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-name="Potting Soil" data-price="1200" data-stock="9">
+        <img src="../Assets/im4.jpg" alt="Potting Soil">
+        <h2>Potting Soil</h2>
+        <div class="price">$1200.00</div>
+        <p>Stock: <span class="stock-count">9</span></p>
+        <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-name="Organic Seed Mix" data-price="3000" data-stock="12">
+        <img src="../Assets/img5.jpg" alt="Organic Seed Mix">
+        <h2>Organic Seed Mix</h2>
+        <div class="price">$3000.00</div>
+        <p>Stock: <span class="stock-count">12</span></p>
+        <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-name="Landscaping Shovel Rake Tool Set" data-price="5000" data-stock="15">
+        <img src="../Assets/lsrt.jpg" alt="Landscaping Shovel Rake Tool Set">
+        <h2>Landscaping Shovel Rake Tool Set</h2>
+        <div class="price">$1800.00</div>
+        <p>Stock: <span class="stock-count">15</span></p>
+        <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-name="Watering Can" data-price="3800" data-stock="7">
+        <img src="../Assets/wc.jpg" alt="Watering Can">
+        <h2>Watering Can</h2>
+        <div class="price">$3800.00</div>
+        <p>Stock: <span class="stock-count">7</span></p>
+        <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-name="Tomato Pepper" data-price="1000" data-stock="16">
+        <img src="../Assets/img10.jpg" alt="Tomato Pepper">
+        <h2>Tomato Pepper</h2>
+        <div class="price">$1000.00</div>
+        <p>Stock: <span class="stock-count">16</span></p>
+        <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-name="Carrot Seeds" data-price="1200" data-stock="19">
+        <img src="../Assets/cs.jpg" alt="Carrot Seeds">
+        <h2>Carrot Seeds</h2>
+        <div class="price">$1200.00</div>
+        <p>Stock: <span class="stock-count">19</span></p>
+        <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <!-- Extra products (hidden by default) -->
+    <div class="product-card hidden-product" data-name="Flower Seeds" data-price="1400" data-stock="8">
+        <img src="../Assets/img8.jpg" alt="Flower Seeds">
+        <h2>Flower Seeds</h2>
+        <div class="price">$1400.00</div>
+        <p>Stock: <span class="stock-count">8</span></p>
+        <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product-card hidden-product" data-name="Callaloo Plant Seeds" data-price="1900" data-stock="3">
+        <img src="../Assets/img9.jpg" alt="Callaloo Plant Seeds">
+        <h2>Callaloo Plant Seeds</h2>
+        <div class="price">$1900.00</div>
+        <p>Stock: <span class="stock-count">3</span></p>
+        <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product-card hidden-product" data-name="Seed Tray" data-price="2900" data-stock="11">
+        <img src="../Assets/wt.jpg" alt="Water Can">
+        <h2>Seed Tray</h2>
+        <div class="price">$2900.00</div>
+        <p>Stock: <span class="stock-count">11</span></p>
+        <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+    <div class="product-card hidden-product" data-name="Watering Kit" data-price="3700" data-stock="15">
+        <img src="../Assets/wk.jpg" alt="Watering Kit">
+        <h2>Watering Kit</h2>
+        <div class="price">$2100.00</div>
+        <p>Stock: <span class="stock-count">15</span></p>
+        <button class="add-to-cart">Add to Cart</button>
+    </div>
+</div>
+
+<script>
+    // Hide the optional products initially
+    document.querySelectorAll('.hidden-product').forEach(card => {
+        card.style.display = "none";
+    });
+
+    // Load cart and stock info from localStorage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let stockData = JSON.parse(localStorage.getItem('stockData')) || {};
+
+    // Sync stock values with localStorage
+    document.querySelectorAll('.product-card').forEach(card => {
+        const name = card.dataset.name;
+        if (stockData[name] === undefined) {
+            stockData[name] = parseInt(card.dataset.stock);
+        } else {
+            card.dataset.stock = stockData[name];
+            card.querySelector('.stock-count').textContent = stockData[name];
+        }
+    });
+
+    // Update cart item count in header
+    function updateCartCount() {
+        document.getElementById('cart-count').textContent =
+            cart.reduce((acc, item) => acc + item.quantity, 0);
+    }
+
+    // Save cart + stock to localStorage
+    function saveCartAndStock() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        localStorage.setItem('stockData', JSON.stringify(stockData));
+        updateCartCount();
+    }
+
+    // Add to cart logic
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', () => {
+            const card = button.closest('.product-card');
+            const name = card.dataset.name;
+            const price = parseFloat(card.dataset.price);
+            let stock = stockData[name];
+
+            if (stock > 0) {
+                const existingItem = cart.find(item => item.name === name);
+
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({ name, price, quantity: 1 });
+                }
+
+                stockData[name] -= 1;
+                card.querySelector('.stock-count').textContent = stockData[name];
+
+                saveCartAndStock();
+                alert(`${name} added to cart`);
+            } else {
+                alert(`${name} is out of stock!`);
+            }
+        });
+    });
+
+    // Search filter
+    function searchProducts() {
+        const searchInput = document.getElementById('search-bar').value.toLowerCase();
+
+        document.querySelectorAll('.product-card').forEach(card => {
+            const name = card.dataset.name.toLowerCase();
+
+            if (name.includes(searchInput) && searchInput !== "") {
+                card.style.display = "block"; 
+            } else {
+                if (card.classList.contains("hidden-product")) {
+                    card.style.display = "none";
+                } else {
+                    card.style.display =
+                        searchInput === "" ? "block" : (name.includes(searchInput) ? "block" : "none");
+                }
+            }
+        });
+    }
+
+    updateCartCount();
+</script>
+
+<footer class="site-footer">
+    <p>About Us</p><br>
+    <p>Sha Morgan - 2306222</p>
+    <p>shagmorgan@students.utech.edu.jm</p>
+    <p>Individual Assignment #2</p>
+    <p>CIT2011 - Web Programming</p>
+    <p>Monday 6pm - 8pm</p><br>
+    <a href="mailto:2306222@utech.edu.jm">2306222@utech.edu.jm</a>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body class="cart-page">
+
+    <header>
+        <h1>Agri Bloom Essentials</h1>
+        <a href="products.html" style="color:white; text-decoration:none;">⬅ Back to Products</a>
+    </header>
+
+    <div class="page-container">
+        <h1>Shopping Cart</h1>
+        <table class="cart-table" id="cart-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+               <!-- // Cart items  -->
+            </tbody>
+        </table>
+
+        <div class="cart-summary" id="cart-summary">
+            <p>Discount: $<span id="discount">0</span></p>
+            <p>Tax: $<span id="tax">0</span></p>
+            <p class="total">Total: $<span id="total">0</span></p>
+            <button id="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <script>
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let stockData = JSON.parse(localStorage.getItem('stockData')) || {};
+
+    function renderCart() {
+        const tbody = document.querySelector('#cart-table tbody');
+        tbody.innerHTML = '';
+        let subtotal = 0;
+
+        cart.forEach((item, index) => {
+            const row = document.createElement('tr');
+            const itemSubtotal = item.price * item.quantity;
+            subtotal += itemSubtotal;
+
+            row.innerHTML = `
+                <td>${item.name}</td>
+                <td>$${item.price.toFixed(2)}</td>
+                <td><input type="number" class="quantity-input" value="${item.quantity}" min="1" data-index="${index}"></td>
+                <td>$${itemSubtotal.toFixed(2)}</td>
+                <td><button class="remove-btn" data-index="${index}">Remove</button></td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        const discount = subtotal * 0.05;
+        const tax = (subtotal - discount) * 0.08;
+        const total = subtotal - discount + tax;
+
+        document.getElementById('discount').textContent = discount.toFixed(2);
+        document.getElementById('tax').textContent = tax.toFixed(2);
+        document.getElementById('total').textContent = total.toFixed(2);
+
+        attachEvents();
+    }
+
+    function attachEvents() {
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            input.addEventListener('change', (e) => {
+                const index = parseInt(e.target.dataset.index);
+                const newQty = parseInt(e.target.value);
+                const item = cart[index];
+
+                if (newQty > 0) {
+                    const diff = newQty - item.quantity;
+
+                    // If user reduces quantity give back stock
+                    if (diff < 0) {
+                        stockData[item.name] += Math.abs(diff);
+                    }
+
+                    // If user increases quantity take stock 
+                    if (diff > 0 && stockData[item.name] >= diff) {
+                        stockData[item.name] -= diff;
+                    } else if (diff > 0) {
+                        alert("Not enough stock!");
+                        e.target.value = item.quantity;
+                        return;
+                    }
+
+                    item.quantity = newQty;
+                    saveAll();
+                    renderCart();
+                }
+            });
+        });
+
+        document.querySelectorAll('.remove-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const index = parseInt(button.dataset.index);
+                const item = cart[index];
+
+                // RETURN STOCK 
+                stockData[item.name] += item.quantity;
+
+                cart.splice(index, 1);
+                saveAll();
+                renderCart();
+            });
+        });
+    }
+
+    function saveAll() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        localStorage.setItem('stockData', JSON.stringify(stockData));
+    }
+
+   document.getElementById('checkout-btn').addEventListener('click', () => {
+    if (cart.length === 0) {
+        alert('Your cart is empty');
+        return;
+    }
+    window.location.href = 'checkout.html';
+});
+
+
+    renderCart();
+</script>
+
+</body>
+</html>

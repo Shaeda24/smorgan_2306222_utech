@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body class="checkout-page">
+
+<header>
+    <h1>Checkout</h1>
+    <a href="cart.html" style="color:white; text-decoration:none;">⬅ Back to Cart</a>
+</header>
+
+<div class="page-container">
+    
+    <h2>Order Summary</h2>
+
+    <table class="cart-table" id="summary-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="cart-summary">
+        <p>Discount: $<span id="discount">0</span></p>
+        <p>Tax: $<span id="tax">0</span></p>
+        <p class="total">Total: $<span id="total">0</span></p>
+    </div>
+
+    <hr>
+
+    <h2>Shipping Details</h2>
+
+    <form id="checkout-form">
+        <label>Full Name:</label>
+        <input type="text" id="name" required>
+
+        <label>Address:</label>
+        <input type="text" id="address" required>
+
+        <label>Phone Number:</label>
+        <input type="text" id="phone" required>
+
+        <label>Amount Being Paid:</label>
+        <input type="number" id="payment" min="0" required>
+
+        <label>Card Number:</label>
+        <input type="text" id="card-number" maxlength="16" required>
+
+        <label>Expiry Date (MM/YY):</label>
+        <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required>
+
+        <label>CVV:</label>
+        <input type="text" id="cvv" maxlength="4" required>
+
+        <div class="checkout-buttons">
+            <button type="button" id="confirm-btn">Confirm</button>
+            <button type="button" id="cancel-btn">Cancel</button>
+        </div>
+    </form>
+
+    <hr>
+
+    <div class="bottom-buttons">
+        <button id="clear-btn">Clear All</button>
+        <button id="checkout-btn">Check Out</button>
+        <button onclick="window.location.href='products.html'">Close</button>
+    </div>
+
+</div>
+
+<script>
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function renderSummary() {
+        const tbody = document.querySelector('#summary-table tbody');
+        tbody.innerHTML = '';
+
+        let subtotal = 0;
+        cart.forEach(item => {
+            let itemSubtotal = item.price * item.quantity;
+            subtotal += itemSubtotal;
+
+            tbody.innerHTML += `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                    <td>$${itemSubtotal.toFixed(2)}</td>
+                </tr>
+            `;
+        });
+
+        const discount = subtotal * 0.05; 
+        const tax = (subtotal - discount) * 0.08;
+        const total = subtotal - discount + tax;
+
+        document.getElementById('discount').textContent = discount.toFixed(2);
+        document.getElementById('tax').textContent = tax.toFixed(2);
+        document.getElementById('total').textContent = total.toFixed(2);
+    }
+
+    // Generate receipt HTML
+    function showReceipt(name, address, phone, total) {
+        const receiptWindow = document.createElement('div');
+        receiptWindow.className = "receipt-popup";
+
+        let itemsHTML = "";
+        cart.forEach(item => {
+            itemsHTML += `<p>${item.name} x${item.quantity} — $${(item.price * item.quantity).toFixed(2)}</p>`;
+        });
+
+        receiptWindow.innerHTML = `
+            <div class="receipt-box">
+                <h2>Receipt</h2>
+
+                <h3>Customer Info</h3>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Address:</strong> ${address}</p>
+                <p><strong>Phone:</strong> ${phone}</p>
+
+                <h3>Items Purchased</h3>
+                ${itemsHTML}
+
+                <h3>Total Paid: $${total}</h3>
+
+                <button onclick="window.location.href='products.html'">Back to Products</button>
+            </div>
+        `;
+
+        document.body.appendChild(receiptWindow);
+    }
+
+    // Confirm order
+    document.getElementById('confirm-btn').addEventListener('click', () => {
+        if (cart.length === 0) {
+            alert("Your cart is empty.");
+            return;
+        }
+
+        const name = document.getElementById('name').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const payment = document.getElementById('payment').value;
+
+        const cardNum = document.getElementById('card-number').value.trim();
+        const expiry = document.getElementById('expiry').value.trim();
+        const cvv = document.getElementById('cvv').value.trim();
+
+        if (!name || !address || !phone || !payment || !cardNum || !expiry || !cvv) {
+            alert("Please fill out all fields.");
+            return;
+        }
+
+        if (cardNum.length < 16 || isNaN(cardNum)) {
+            alert("Invalid card number.");
+            return;
+        }
+
+        if (!expiry.includes("/") || expiry.length !== 5) {
+            alert("Invalid expiry date format (MM/YY).");
+            return;
+        }
+
+        if (cvv.length < 3 || isNaN(cvv)) {
+            alert("Invalid CVV.");
+            return;
+        }
+
+        const total = document.getElementById('total').textContent;
+
+        // Show receipt popup
+        showReceipt(name, address, phone, total);
+
+        // Clear cart after generating receipt
+        cart = [];
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderSummary();
+    });
+
+    document.getElementById('cancel-btn').addEventListener('click', () => {
+        window.location.href = "cart.html";
+    });
+
+    document.getElementById('clear-btn').addEventListener('click', () => {
+        if (confirm("Clear all items?")) {
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderSummary();
+        }
+    });
+
+    document.getElementById('checkout-btn').addEventListener('click', () => {
+        if (cart.length === 0) {
+            alert("Nothing to check out.");
+            return;
+        }
+        alert("Checking out...");
+        cart = [];
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderSummary();
+    });
+
+    renderSummary();
+</script>
+
+
+</body>
+</html>

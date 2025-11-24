@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register - AgroSupply Store</title>
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<div class="login-container">
+    <h1>Create Account</h1>
+
+    <form id="registerForm">
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter email">
+
+        <label for="newUsername">Username</label>
+        <input type="text" id="newUsername" name="newUsername" placeholder="Enter username">
+
+        <label for="newPassword">Password</label>
+        <input type="password" id="newPassword" name="newPassword" placeholder="Enter password">
+
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password">
+
+        <p id="registerError" class="error"></p>
+
+        <button type="submit" id="registerBtn">Register</button>
+    </form>
+
+    <p class="register-text">
+        Already have an account?
+        <a href="login.html" class="register-link">Login</a>
+    </p>
+</div>
+
+<script>
+// Registration form handling
+
+const registerForm = document.getElementById("registerForm");
+const errorMsg = document.getElementById("registerError");
+
+registerForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const username = document.getElementById("newUsername").value.trim();
+    const password = document.getElementById("newPassword").value.trim();
+    const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+    // Check for empty fields
+    if (email === "" || username === "" || password === "" || confirmPassword === "") {
+        errorMsg.textContent = "All fields are required.";
+        return;
+    }
+
+    
+    if (!email.includes("@") || !email.includes(".")) {
+        errorMsg.textContent = "Please enter a valid email.";
+        return;
+    }
+
+   
+    if (password !== confirmPassword) {
+        errorMsg.textContent = "Passwords do not match.";
+        return;
+    }
+
+    // Save account info in localStorage
+    localStorage.setItem("regEmail", email);
+    localStorage.setItem("regUsername", username);
+    localStorage.setItem("regPassword", password);
+
+    alert("Account created successfully!");
+    window.location.href = "login.html"; 
+});
+</script>
+
+</body>
+</html>
